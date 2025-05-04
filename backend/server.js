@@ -5,31 +5,35 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = 5000;
+const FILE_PATH = './contacts.json';
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// The file path where contacts will be saved
-const FILE_PATH = './contacts.json';
-
-// POST route to handle form submissions
+// POST: Save contact
 app.post('/api/contact', (req, res) => {
   const newContact = req.body;
-
-  // Check if the contacts.json file exists, otherwise, initialize an empty array
   const data = fs.existsSync(FILE_PATH) ? JSON.parse(fs.readFileSync(FILE_PATH)) : [];
-
-  // Add the new contact to the existing data
   data.push(newContact);
-
-  // Save the updated contact data back to the JSON file
   fs.writeFileSync(FILE_PATH, JSON.stringify(data, null, 2));
-
-  // Send a success response
   res.status(201).json({ message: 'Contact saved successfully' });
 });
 
-// Listen on the defined port
+// GET: Retrieve all contacts with error logging
+app.get('/api/contacts', (req, res) => {
+  try {
+    if (fs.existsSync(FILE_PATH)) {
+      const data = JSON.parse(fs.readFileSync(FILE_PATH));
+      res.json(data);
+    } else {
+      res.json([]); // Return empty array if no file exists
+    }
+  } catch (error) {
+    console.error('Error reading contacts file:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });

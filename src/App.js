@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -10,10 +11,23 @@ function App() {
   return (
     <div>
       <Navbar />
-      <Hero />
+
+      {/* Hero Section */}
+      <Hero
+        title="Welcome to Business Services Site"
+        subtitle="Company Registration, Compliance, Blogs & More"
+      />
+
+      {/* Services Section */}
       <Services />
+
+      {/* About Section */}
       <About />
+
+      {/* Contact Section */}
       <Contact />
+
+      {/* Footer */}
       <Footer />
     </div>
   );
